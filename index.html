@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Workout Picker</title>
+		<style>
+			body,
+			html {
+				height: 100%;
+				margin: 0;
+                background: rgb(238,174,202);
+                background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(195,180,217,1) 34%, rgba(148,187,233,1) 100%);
+
+                font-family: 'Trebuchet MS', sans-serif;
+			}
+
+			.container {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+			}
+
+			.container-up,
+			.container-down {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.form-inline {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+
+			.dropdown {
+				width: 200px;
+				padding: 10px;
+				margin: 5px;
+			}
+
+			.button {
+				padding: 10px 15px;
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				cursor: pointer;
+			}
+
+			.button:hover {
+				background-color: #45a049;
+			}
+
+			form {
+				text-align: center;
+			}
+
+			#workoutDisplay {
+				margin: 10px;
+                padding: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="container-up">
+				<h1>Workout Picker</h1>
+			</div>
+			<div class="container-down">
+				<form action="YOUR_ENDPOINT_URL" method="get" class="form-inline">
+					<p>I have</p>
+					<select name="dropdown1" class="dropdown">
+						<option value="10">10</option>
+						<option value="20">20</option>
+						<option value="30">30</option>
+					</select>
+					<p>mins, and I'm feeling</p>
+					<select name="dropdown2" class="dropdown">
+						<option value="energetic">energetic</option>
+						<option value="tired">tired</option>
+						<option value="sore">sore</option>
+					</select>
+
+					<button type="submit">Submit</button>
+				</form>
+			</div>
+			<div id="workoutDisplay"></div>
+            
+	<script>
+		const workouts = [
+			{ link: "https://www.youtube.com/embed/_yNHzgXUHqY", tags: ["10", "energetic"] },
+			{ link: "https://www.youtube.com/embed/vFai116E69M", tags: ["10", "energetic"] },
+			{ link: "https://www.youtube.com/embed/TVIdnKmEzEI", tags: ["10", "energetic"] },
+			{ link: "https://www.youtube.com/embed/2eA2Koq6pTI", tags: ["10", "sore"] },
+			{ link: "https://www.youtube.com/embed/4pKly2JojMw", tags: ["10", "sore"] },
+			{ link: "https://www.youtube.com/embed/D0LvavdptdM", tags: ["10", "sore"] },
+			{ link: "https://www.youtube.com/embed/UxU8OCsNbYY", tags: ["10", "tired"] },
+			{ link: "https://www.youtube.com/embed/BS7ZmDZ-PF4", tags: ["10", "tired"] },
+			{ link: "https://www.youtube.com/embed/vjEAmyKgve0", tags: ["10", "tired"] },
+            { link: "https://www.youtube.com/embed/-_6uhR46pvE", tags: ["20", "energetic"] },
+			{ link: "https://www.youtube.com/embed/EpRxH1v-nqc", tags: ["20", "energetic"] },
+			{ link: "https://www.youtube.com/embed/poZBpvLTHNw", tags: ["20", "energetic"] },
+			{ link: "https://www.youtube.com/embed/TDo4HU60IXY", tags: ["20", "sore"] },
+			{ link: "https://www.youtube.com/embed/rpbGJp-DBIk", tags: ["20", "sore"] },
+			{ link: "https://www.youtube.com/embed/HvluUhDizIY", tags: ["20", "sore"] },
+			{ link: "https://www.youtube.com/embed/gDfK9zf76AY", tags: ["20", "tired"] },
+			{ link: "https://www.youtube.com/embed/IT94xC35u6k", tags: ["20", "tired"] },
+			{ link: "https://www.youtube.com/embed/yXHgcYpUVD4", tags: ["20", "tired"] },
+            { link: "https://www.youtube.com/embed/jKTxe236-4U", tags: ["30", "energetic"] },
+			{ link: "https://www.youtube.com/embed/jpizoUy4K9s", tags: ["30", "energetic"] },
+			{ link: "https://www.youtube.com/embed/uearF2Iorng", tags: ["30", "energetic"] },
+			{ link: "https://www.youtube.com/embed/lNftFawOAUM", tags: ["30", "sore"] },
+			{ link: "https://www.youtube.com/embed/C2HX2pNbUCM", tags: ["30", "sore"] },
+			{ link: "https://www.youtube.com/embed/kZDvg92tTMc", tags: ["30", "sore"] },
+			{ link: "https://www.youtube.com/embed/C2HX2pNbUCM", tags: ["30", "tired"] },
+			{ link: "https://www.youtube.com/embed/lBCBSy9cNT0", tags: ["30", "tired"] },
+			{ link: "https://www.youtube.com/embed/lNftFawOAUM", tags: ["30", "tired"] },
+		];
+		document.querySelector("form").addEventListener("submit", function (event) {
+			event.preventDefault();
+
+			const selectedTime = document.querySelector(
+				'select[name="dropdown1"]'
+			).value;
+			const selectedMood = document.querySelector(
+				'select[name="dropdown2"]'
+			).value;
+
+			const filteredWorkouts = workouts.filter(
+				(workout) =>
+					workout.tags.includes(selectedTime) &&
+					workout.tags.includes(selectedMood)
+			);
+
+			console.log("Selected Time:", selectedTime);
+			console.log("Selected Mood:", selectedMood);
+			console.log("Filtered Workouts:", filteredWorkouts);
+
+			if (filteredWorkouts.length > 0) {
+				const randomWorkout =
+					filteredWorkouts[Math.floor(Math.random() * filteredWorkouts.length)];
+				displayWorkout(randomWorkout);
+			} else {
+				displayNoWorkoutFound();
+			}
+		});
+
+		function displayWorkout(workout) {
+            document.getElementById("workoutDisplay").innerHTML = 
+                `<iframe width="560" height="315" src="${workout.link}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
+
+		function displayNoWorkoutFound() {
+			document.getElementById("workoutDisplay").innerText = "No workout found.";
+		}
+	</script>
+</html>
